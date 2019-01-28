@@ -14,6 +14,18 @@ PrefabFiles =
   "iron",
 }
 
+-- Bybass nil function and variables
+_G.MakeBlowInHurricane = function(...)
+end
+_G.MakeInventoryFloatable = function(...)
+end
+_G.TUNING.WINDBLOWN_SCALE_MIN = {
+  MEDIUM = nil,
+}
+_G.TUNING.WINDBLOWN_SCALE_MAX = {
+  MEDIUM = nil,
+}
+
 if DEBUG then
   local SpawnPrefab = _G.SpawnPrefab
   AddPlayerPostInit(function(inst)

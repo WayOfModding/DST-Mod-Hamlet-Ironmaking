@@ -58,11 +58,13 @@ local function fn(Sim)
   inst:AddTag("molebait")
   inst:AddTag("scarerbait")
 
+  --[[
   inst:AddComponent("tiletracker")
   inst.components.tiletracker:SetOnWaterChangeFn(OnWaterChange)
   inst.onwater = false
   inst.OnEntityWake = OnEntityWake
   inst.OnEntitySleep = OnEntitySleep
+  --]]
 
   shine(inst)
   return inst
