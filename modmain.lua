@@ -9,4 +9,7 @@ Assets =
 
 PrefabFiles =
 {
+  "smelter",
+  "alloy",
+  "iron",
 }
