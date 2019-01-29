@@ -14,6 +14,9 @@ PrefabFiles =
   "iron",
 }
 
+require("modstrings")
+require("modrecipes")
+
 -- Bybass nil function and variables
 _G.MakeBlowInHurricane = function(...)
 end
