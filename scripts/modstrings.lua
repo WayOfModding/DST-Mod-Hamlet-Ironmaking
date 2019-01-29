@@ -1,3 +1,5 @@
+-------------------------------
+-- Prefab
 STRINGS.NAMES.ALLOY = "Alloy"
 
 STRINGS.NAMES.SMELTER = "Smelter"
@@ -9,3 +11,7 @@ STRINGS.NAMES.ANTMASKHAT = "Mant Mask"
 STRINGS.RECIPE_DESC.ANTMASKHAT = "A face only a Mant could love."
 STRINGS.NAMES.ANTSUIT = "Mant Suit"
 STRINGS.RECIPE_DESC.ANTSUIT = "Walk a mile in a Mant's carapace."
+
+-------------------------------
+-- Action
+STRINGS.ACTIONS.SMELT = "Smelt"

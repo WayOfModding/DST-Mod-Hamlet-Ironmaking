@@ -53,7 +53,7 @@ local slotpos = {
 }
 
 local widgetbuttoninfo = {
-  text = STRINGS.ACTIONS.COOK.SMELT,
+  text = STRINGS.ACTIONS.SMELT,
   position = Vector3(0, -165, 0),
   fn = function(inst)
     inst.components.melter:StartCooking()
