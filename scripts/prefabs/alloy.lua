@@ -1,6 +1,8 @@
-local assets=
+local imageAtlas = "images/modimages.xml"
+local assets =
 {
   Asset("ANIM", "anim/alloy.zip"),
+  Asset("ATLAS", imageAtlas),
 }
 
 local function shine(inst)
@@ -33,7 +35,8 @@ local function fn(Sim)
   inst.entity:AddTransform()
   inst.entity:AddAnimState()
   inst.entity:AddSoundEmitter()
-  inst.entity:AddPhysics()
+  inst.entity:AddNetwork()
+
   MakeInventoryPhysics(inst)
   MakeInventoryFloatable(inst, "idle_water", "idle")
   MakeBlowInHurricane(inst, TUNING.WINDBLOWN_SCALE_MIN.MEDIUM, TUNING.WINDBLOWN_SCALE_MAX.MEDIUM)
@@ -44,6 +47,13 @@ local function fn(Sim)
   inst.AnimState:SetBuild("alloy")
   inst.AnimState:PlayAnimation("idle")
 
+    inst:AddTag("_alloy")
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+    inst:RemoveTag("_alloy")
+
   inst:AddComponent("edible")
   inst.components.edible.foodtype = "ELEMENTAL"
   inst.components.edible.hungervalue = 2
@@ -53,6 +63,7 @@ local function fn(Sim)
 
   inst:AddComponent("stackable")
   inst:AddComponent("inventoryitem")
+  inst.components.inventoryitem.atlasname = imageAtlas
 
   inst:AddComponent("bait")
   inst:AddTag("molebait")
@@ -70,4 +81,4 @@ local function fn(Sim)
   return inst
 end
 
-return Prefab("common/inventory/alloy", fn, assets)
+return Prefab("alloy", fn, assets)

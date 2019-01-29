@@ -2,10 +2,12 @@ require "prefabutil"
 
 --local cooking = require("smelting")
 
+local imageAtlas = "images/modimages.xml"
 local assets=
 {
   Asset("ANIM", "anim/smelter.zip"),
   --Asset("ANIM", "anim/cook_pot_food.zip"),
+  Asset("ATLAS", imageAtlas),
 }
 
 local prefabs = {"collapse_small"}
@@ -267,9 +269,10 @@ local function fn(Sim)
   inst.entity:AddTransform()
   inst.entity:AddAnimState()
   inst.entity:AddSoundEmitter()
+  inst.entity:AddNetwork()
 
   local minimap = inst.entity:AddMiniMapEntity()
-  minimap:SetIcon("cookpot.png")
+  minimap:SetIcon("smelter.png")
 
   local light = inst.entity:AddLight()
   inst.Light:Enable(false)
@@ -286,6 +289,14 @@ local function fn(Sim)
   inst.AnimState:SetBuild("smelter")
   inst.AnimState:PlayAnimation("idle_empty")
 
+    inst:AddTag("_smelter")
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+    inst:RemoveTag("_smelter")
+
+  --[[ TODO
   inst:AddComponent("melter")
   inst.components.melter.onstartcooking = startcookfn
   inst.components.melter.oncontinuecooking = continuecookfn
@@ -293,6 +304,7 @@ local function fn(Sim)
   inst.components.melter.ondonecooking = donecookfn
   inst.components.melter.onharvest = harvestfn
   inst.components.melter.onspoil = spoilfn
+  --]]
 
   inst:AddComponent("container")
   inst.components.container.itemtestfn = itemtest
@@ -323,11 +335,13 @@ local function fn(Sim)
   inst.components.workable:SetOnFinishCallback(onhammered)
   inst.components.workable:SetOnWorkCallback(onhit)
 
+  --[[ Maybe this means this prefab inst can be placed in interior, say playerhouse_city
   inst:AddComponent("floodable")
   inst.components.floodable.onStartFlooded = onFloodedStart
   inst.components.floodable.onStopFlooded = onFloodedEnd
   inst.components.floodable.floodEffect = "shock_machines_fx"
   inst.components.floodable.floodSound = "dontstarve_DLC002/creatures/jellyfish/electric_land"
+  --]]
 
   MakeSnowCovered(inst, .01)
   inst:ListenForEvent("onbuilt", onbuilt)
@@ -341,5 +355,5 @@ local function fn(Sim)
   return inst
 end
 
-return Prefab("common/smelter", fn, assets, prefabs),
-  MakePlacer("common/smetler_placer", "smelter", "smelter", "idle_empty")
+return Prefab("smelter", fn, assets, prefabs),
+  MakePlacer("smetler_placer", "smelter", "smelter", "idle_empty")

@@ -1,6 +1,8 @@
+local imageAtlas = "images/modimages.xml"
 local assets=
 {
   Asset("ANIM", "anim/iron_ore.zip"),
+  Asset("ATLAS", imageAtlas),
 }
 
 local function onsave(inst, data)
@@ -19,12 +21,21 @@ local function fn(Sim)
   inst.entity:AddTransform()
   inst.entity:AddAnimState()
   inst.entity:AddSoundEmitter()
+  inst.entity:AddNetwork()
+
   MakeInventoryPhysics(inst)
   MakeBlowInHurricane(inst, TUNING.WINDBLOWN_SCALE_MIN.HEAVY, TUNING.WINDBLOWN_SCALE_MAX.HEAVY)
 
   inst.AnimState:SetBank("iron_ore")
   inst.AnimState:SetBuild("iron_ore")
   inst.AnimState:PlayAnimation("idle")
+
+    inst:AddTag("_iron")
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+    inst:RemoveTag("_iron")
 
   inst:AddComponent("edible")
   inst.components.edible.foodtype = "ELEMENTAL"
@@ -37,6 +48,7 @@ local function fn(Sim)
   inst:AddComponent("inspectable")
 
   inst:AddComponent("inventoryitem")
+  inst.components.inventoryitem.atlasname = imageAtlas
 
   inst:AddComponent("bait")
   inst:AddTag("molebait")
@@ -51,4 +63,4 @@ local function fn(Sim)
   return inst
 end
 
-return Prefab("common/inventory/iron", fn, assets)
+return Prefab("iron", fn, assets)
