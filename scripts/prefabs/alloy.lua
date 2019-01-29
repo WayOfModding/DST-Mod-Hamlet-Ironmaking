@@ -1,8 +1,9 @@
-local imageAtlas = "images/modimages.xml"
+local imageAtlas = "images/alloy.xml"
 local assets =
 {
   Asset("ANIM", "anim/alloy.zip"),
   Asset("ATLAS", imageAtlas),
+  Asset("INV_IMAGE", "alloy"),
 }
 
 local function shine(inst)

@@ -1,8 +1,0 @@
-<Atlas><Texture filename="modimages.tex" /><Elements>
-<Element name="alloy.tex" u1="0" u2="0.125" v1="0" v2="0.125" />
-<Element name="antmaskhat.tex" u1="0.125" u2="0.25" v1="0" v2="0.125" />
-<Element name="antsuit.tex" u1="0.25" u2="0.375" v1="0" v2="0.125" />
-<Element name="chitin.tex" u1="0.5" u2="0.625" v1="0" v2="0.125" />
-<Element name="iron.tex" u1="0.625" u2="0.75" v1="0" v2="0.125" />
-<Element name="smelter.tex" u1="0.75" u2="0.875" v1="0" v2="0.125" />
-</Elements></Atlas>

@@ -2,7 +2,7 @@ require "prefabutil"
 
 --local cooking = require("smelting")
 
-local imageAtlas = "images/modimages.xml"
+local imageAtlas = "images/smelter.xml"
 local assets=
 {
   Asset("ANIM", "anim/smelter.zip"),

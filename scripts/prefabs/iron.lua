@@ -1,8 +1,9 @@
-local imageAtlas = "images/modimages.xml"
-local assets=
+local imageAtlas = "images/iron.xml"
+local assets =
 {
   Asset("ANIM", "anim/iron_ore.zip"),
   Asset("ATLAS", imageAtlas),
+  Asset("INV_IMAGE", "iron"),
 }
 
 local function onsave(inst, data)

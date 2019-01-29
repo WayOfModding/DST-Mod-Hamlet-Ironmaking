@@ -1,5 +1,3 @@
-local ModImagesAtlas = "images/modimages.xml"
-
 Recipe(
   "smelter",
   {
@@ -9,8 +7,14 @@ Recipe(
   },
   RECIPETABS.SCIENCE,
   TECH.SCIENCE_TWO,
-  "smetler_placer"
-).atlas = ModImagesAtlas
+  "smetler_placer",
+  nil,
+  nil,
+  nil,
+  nil,
+  "images/smelter.xml", -- atlas
+  "smelter.tex" -- image
+)
 Recipe(
   "antmaskhat",
   {
