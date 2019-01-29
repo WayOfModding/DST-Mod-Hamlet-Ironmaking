@@ -16,7 +16,7 @@ Recipe(
     Ingredient("footballhat", 1)
   },
   RECIPETABS.WAR,
-  TECH.SCIENCE_ONE,
+  TECH.SCIENCE_ONE
 )
 Recipe(
   "antsuit",
@@ -25,5 +25,5 @@ Recipe(
     Ingredient("armorwood", 1)
   },
   RECIPETABS.WAR,
-  TECH.SCIENCE_ONE,
+  TECH.SCIENCE_ONE
 )
