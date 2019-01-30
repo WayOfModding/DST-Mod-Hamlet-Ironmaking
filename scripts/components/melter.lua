@@ -1,6 +1,7 @@
 --local cooking = require("smelting")
 
 local function ondone(self, done)
+  print("KK-TEST> function `ondone` invoked: done =", done)
   if done then
     self.inst:AddTag("donecooking")
   else
