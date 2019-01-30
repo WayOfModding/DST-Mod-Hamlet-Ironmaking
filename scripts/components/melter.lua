@@ -1,5 +1,13 @@
 --local cooking = require("smelting")
 
+local function ondone(self, done)
+  if done then
+    self.inst:AddTag("donecooking")
+  else
+    self.inst:RemoveTag("donecooking")
+  end
+end
+
 local Melter = Class(function(self, inst)
   self.inst = inst
   self.cooking = false
@@ -22,7 +30,11 @@ local Melter = Class(function(self, inst)
   self.productcooker = nil    -- hold on to the cookername that is cooking the current product
 
   self.inst:AddTag("stewer")
-end)
+end,
+nil,
+{
+  done = ondone,
+})
 
 local function dospoil(inst)
   if inst.components.melter and inst.components.melter.onspoil then
@@ -239,18 +251,6 @@ function Melter:GetDebugString()
     end
 
   return str
-end
-
-function Melter:CollectSceneActions(doer, actions, right)
-  if not doer.components.rider or not doer.components.rider:IsRiding() then
-    if not self.inst:HasTag("burnt") then
-      if self.done then
-        table.insert(actions, ACTIONS.HARVEST)
-      elseif right and self:CanCook() then
-        table.insert(actions, ACTIONS.COOK)
-      end
-    end
-  end
 end
 
 function Melter:IsDone()

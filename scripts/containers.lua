@@ -119,9 +119,9 @@ params.cookpot =
     {
         slotpos =
         {
-            Vector3(0, 64 + 32 + 8 + 4, 0), 
+            Vector3(0, 64 + 32 + 8 + 4, 0),
             Vector3(0, 32 + 4, 0),
-            Vector3(0, -(32 + 4), 0), 
+            Vector3(0, -(32 + 4), 0),
             Vector3(0, -(64 + 32 + 8 + 4), 0),
         },
         animbank = "ui_cookpot_1x4",
@@ -155,6 +155,54 @@ function params.cookpot.widget.buttoninfo.validfn(inst)
 end
 
 --------------------------------------------------------------------------
+--[[ smelter ]]
+--------------------------------------------------------------------------
+
+params.smelter =
+{
+  widget =
+  {
+    slotpos =
+    {
+      Vector3(0, 64 + 32 + 8 + 4, 0),
+      Vector3(0, 32 + 4, 0),
+      Vector3(0, -(32 + 4), 0),
+      Vector3(0, -(64 + 32 + 8 + 4), 0),
+    },
+    animbank = "ui_cookpot_1x4",
+    animbuild = "ui_cookpot_1x4",
+    pos = Vector3(200, 0, 0),
+    side_align_tip = 100,
+    buttoninfo = {
+      text = STRINGS.ACTIONS.SMELT,
+      position = Vector3(0, -165, 0),
+      fn = function(inst) inst.components.melter:StartCooking() end,
+    }
+  },
+  acceptsstacks = false,
+  type = "cooker",
+}
+
+function params.smelter.itemtestfn(container, item, slot)
+  return not container.inst:HasTag("burnt") and item.prefab == "iron"
+end
+
+function params.smelter.widget.buttoninfo.fn(inst)
+  -- TODO
+  print("KK-TEST> Button down: SMELT/COOK ...")
+  if inst.components.container ~= nil then
+    BufferedAction(inst.components.container.opener, inst, ACTIONS.COOK):Do()
+  elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+    SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.COOK.code, inst, ACTIONS.COOK.mod_name)
+  end
+  inst.components.melter:StartCooking()
+end
+
+function params.smelter.widget.buttoninfo.validfn(inst)
+  return inst.components.melter ~= nil and inst.components.melter:CanCook()
+end
+
+--------------------------------------------------------------------------
 --[[ bundle_container ]]
 --------------------------------------------------------------------------
 
@@ -164,9 +212,9 @@ params.bundle_container =
     {
         slotpos =
         {
-            Vector3(-37.5, 32 + 4, 0), 
+            Vector3(-37.5, 32 + 4, 0),
             Vector3(37.5, 32 + 4, 0),
-            Vector3(-37.5, -(32 + 4), 0), 
+            Vector3(-37.5, -(32 + 4), 0),
             Vector3(37.5, -(32 + 4), 0),
         },
         animbank = "ui_bundle_2x2",
@@ -253,9 +301,9 @@ params.mushroom_light =
     {
         slotpos =
         {
-            Vector3(0, 64 + 32 + 8 + 4, 0), 
+            Vector3(0, 64 + 32 + 8 + 4, 0),
             Vector3(0, 32 + 4, 0),
-            Vector3(0, -(32 + 4), 0), 
+            Vector3(0, -(32 + 4), 0),
             Vector3(0, -(64 + 32 + 8 + 4), 0),
         },
         animbank = "ui_lamp_1x4",
@@ -321,9 +369,9 @@ params.livingtree_halloween =
     {
         slotpos =
         {
-            Vector3(-(64 + 12), 0, 0), 
+            Vector3(-(64 + 12), 0, 0),
             Vector3(0, 0, 0),
-            Vector3(64 + 12, 0, 0), 
+            Vector3(64 + 12, 0, 0),
         },
         animbank = "ui_chest_3x1",
         animbuild = "ui_chest_3x1",
@@ -554,9 +602,9 @@ params.quagmire_pot =
     {
         slotpos =
         {
-            Vector3(0, 64 + 32 + 8 + 4, 0), 
+            Vector3(0, 64 + 32 + 8 + 4, 0),
             Vector3(0, 32 + 4, 0),
-            Vector3(0, -(32 + 4), 0), 
+            Vector3(0, -(32 + 4), 0),
             Vector3(0, -(64 + 32 + 8 + 4), 0),
         },
         animbank = "quagmire_ui_pot_1x4",
@@ -585,9 +633,9 @@ params.quagmire_pot_small =
     {
         slotpos =
         {
-            Vector3(0, 64 + 8, 0), 
+            Vector3(0, 64 + 8, 0),
             Vector3(0, 0, 0),
-            Vector3(0, -(64 + 8), 0), 
+            Vector3(0, -(64 + 8), 0),
         },
         animbank = "quagmire_ui_pot_1x3",
         animbuild = "quagmire_ui_pot_1x3",
@@ -634,9 +682,9 @@ params.quagmire_pot_syrup =
     {
         slotpos =
         {
-            Vector3(0, 64 + 8, 0), 
+            Vector3(0, 64 + 8, 0),
             Vector3(0, 0, 0),
-            Vector3(0, -(64 + 8), 0), 
+            Vector3(0, -(64 + 8), 0),
         },
         animbank = "quagmire_ui_pot_1x3",
         animbuild = "quagmire_ui_pot_1x3",

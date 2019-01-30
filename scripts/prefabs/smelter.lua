@@ -1,22 +1,16 @@
 require "prefabutil"
 
---local cooking = require("smelting")
-
 local imageAtlas = "images/smelter.xml"
 local assets=
 {
   Asset("ANIM", "anim/smelter.zip"),
-  --Asset("ANIM", "anim/cook_pot_food.zip"),
   Asset("ATLAS", imageAtlas),
 }
 
-local prefabs = {"collapse_small"}
---[[
-for k,v in pairs(cooking.recipes.cookpot) do
-  table.insert(prefabs, v.name)
-end
-]]
-
+local prefabs =
+{
+  "collapse_small"
+}
 
 local function onhammered(inst, worker)
   if inst:HasTag("fire") and inst.components.burnable then
@@ -26,7 +20,8 @@ local function onhammered(inst, worker)
     inst.components.lootdropper:AddChanceLoot(inst.components.melter.product, 1)
   end
   inst.components.lootdropper:DropLoot()
-  SpawnPrefab("collapse_small").Transform:SetPosition(inst.Transform:GetWorldPosition())
+  local fx = SpawnPrefab("collapse_small")
+  fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
   inst.SoundEmitter:PlaySound("dontstarve/common/destroy_metal")
   inst:Remove()
 end
@@ -41,33 +36,6 @@ local function onhit(inst, worker)
       inst.AnimState:PushAnimation("idle_full")
     else
       inst.AnimState:PushAnimation("idle_empty")
-    end
-  end
-end
-
-local slotpos = {
-  Vector3(0,64+32+8+4,0),
-  Vector3(0,32+4,0),
-  Vector3(0,-(32+4),0),
-  Vector3(0,-(64+32+8+4),0)
-}
-
-local widgetbuttoninfo = {
-  text = STRINGS.ACTIONS.SMELT,
-  position = Vector3(0, -165, 0),
-  fn = function(inst)
-    inst.components.melter:StartCooking()
-  end,
-
-  validfn = function(inst)
-    return inst.components.melter:CanCook()
-  end,
-}
-
-local function itemtest(inst, item, slot)
-  if not inst:HasTag("burnt") then
-    if item.prefab == "iron" then
-      return true
     end
   end
 end
@@ -247,25 +215,9 @@ local function onload(inst, data)
   end
 end
 
-local function onFloodedStart(inst)
-  if inst.components.container then
-    inst.components.container.canbeopened = false
-  end
-  if inst.components.melter then
-    if inst.components.melter.cooking then
-      inst.components.melter.product = "wetgoop"
-    end
-  end
-end
-
-local function onFloodedEnd(inst)
-  if inst.components.container then
-    inst.components.container.canbeopened = true
-  end
-end
-
 local function fn(Sim)
   local inst = CreateEntity()
+
   inst.entity:AddTransform()
   inst.entity:AddAnimState()
   inst.entity:AddSoundEmitter()
@@ -289,6 +241,8 @@ local function fn(Sim)
   inst.AnimState:SetBuild("smelter")
   inst.AnimState:PlayAnimation("idle_empty")
 
+  MakeSnowCoveredPristine(inst)
+
     inst:AddTag("_smelter")
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
@@ -296,7 +250,6 @@ local function fn(Sim)
     end
     inst:RemoveTag("_smelter")
 
-  --[[ TODO
   inst:AddComponent("melter")
   inst.components.melter.onstartcooking = startcookfn
   inst.components.melter.oncontinuecooking = continuecookfn
@@ -304,20 +257,9 @@ local function fn(Sim)
   inst.components.melter.ondonecooking = donecookfn
   inst.components.melter.onharvest = harvestfn
   inst.components.melter.onspoil = spoilfn
-  --]]
 
   inst:AddComponent("container")
-  inst.components.container.itemtestfn = itemtest
-  inst.components.container:SetNumSlots(4)
-  inst.components.container.widgetslotpos = slotpos
-  inst.components.container.widgetanimbank = "ui_cookpot_1x4"
-  inst.components.container.widgetanimbuild = "ui_cookpot_1x4"
-  inst.components.container.widgetpos = Vector3(200,0,0)
-  inst.components.container.side_align_tip = 100
-  inst.components.container.widgetbuttoninfo = widgetbuttoninfo
-  inst.components.container.acceptsstacks = false
-  inst.components.container.type = "cooker"
-
+  inst.components.container:WidgetSetup("smelter")
   inst.components.container.onopenfn = onopen
   inst.components.container.onclosefn = onclose
 
@@ -335,15 +277,10 @@ local function fn(Sim)
   inst.components.workable:SetOnFinishCallback(onhammered)
   inst.components.workable:SetOnWorkCallback(onhit)
 
-  --[[ Maybe this means this prefab inst can be placed in interior, say playerhouse_city
-  inst:AddComponent("floodable")
-  inst.components.floodable.onStartFlooded = onFloodedStart
-  inst.components.floodable.onStopFlooded = onFloodedEnd
-  inst.components.floodable.floodEffect = "shock_machines_fx"
-  inst.components.floodable.floodSound = "dontstarve_DLC002/creatures/jellyfish/electric_land"
-  --]]
+  inst:AddComponent("hauntable")
+  inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
 
-  MakeSnowCovered(inst, .01)
+  MakeSnowCovered(inst)
   inst:ListenForEvent("onbuilt", onbuilt)
 
   MakeMediumBurnable(inst, nil, nil, true)
