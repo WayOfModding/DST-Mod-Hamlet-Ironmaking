@@ -29,6 +29,7 @@ _G.TUNING.WINDBLOWN_SCALE_MAX = {
   MEDIUM = nil,
 }
 
+--------------------------------------------------------------------
 local ACTIONS = _G.ACTIONS
 local old_harvest_fn = ACTIONS.HARVEST.fn
 ACTIONS.HARVEST.fn = function(act)
@@ -37,7 +38,23 @@ ACTIONS.HARVEST.fn = function(act)
   end
   return old_harvest_fn(act)
 end
+--------------------------------------------------------------------
+-- make `rock1`, `rock2` and `rock_moon` drop iron ore
+local function change_rockdrop(drop_rate)
+  return function(inst)
+    if inst and inst.components.lootdropper then
+      if drop_rate and 0 <= drop_rate and drop_rate <= 1 then
+        local ld = inst.components.lootdropper
+        ld:AddChanceLoot("iron", drop_rate)
+      end
+    end
+  end
+end
 
+AddPrefabPostInit("rock1", change_rockdrop(0.25))
+AddPrefabPostInit("rock2", change_rockdrop(0.5))
+AddPrefabPostInit("rock_moon", change_rockdrop(1.0))
+--------------------------------------------------------------------
 if DEBUG then
   local SpawnPrefab = _G.SpawnPrefab
   AddPlayerPostInit(function(inst)
