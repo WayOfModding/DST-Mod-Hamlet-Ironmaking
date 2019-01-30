@@ -29,6 +29,15 @@ _G.TUNING.WINDBLOWN_SCALE_MAX = {
   MEDIUM = nil,
 }
 
+local ACTIONS = _G.ACTIONS
+local old_harvest_fn = ACTIONS.HARVEST.fn
+ACTIONS.HARVEST.fn = function(act)
+  if act.target.components.melter ~= nil then
+    return act.target.components.melter:Harvest(act.doer)
+  end
+  return old_harvest_fn(act)
+end
+
 if DEBUG then
   local SpawnPrefab = _G.SpawnPrefab
   AddPlayerPostInit(function(inst)
