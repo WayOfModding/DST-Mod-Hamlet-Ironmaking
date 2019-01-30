@@ -1,7 +1,7 @@
 local _G = GLOBAL
 local require = _G.require
 
-local DEBUG = true
+local DEBUG = false
 
 Assets =
 {
@@ -50,6 +50,9 @@ if DEBUG then
 
     -- Spawn items in tester's inventory
     if inst.components.inventory then
+      giveitem("iron")
+      giveitem("iron")
+      giveitem("iron")
       giveitem("iron")
       giveitem("alloy")
     end
