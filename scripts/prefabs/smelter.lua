@@ -152,17 +152,20 @@ local function harvestfn(inst)
 end
 
 local function getstatus(inst)
+  local result
   if inst:HasTag("burnt") then
-    return "BURNT"
+    result = "BURNT"
   elseif inst.components.melter.cooking and inst.components.melter:GetTimeToCook() > 15 then
-    return "COOKING_LONG"
+    result = "COOKING_LONG"
   elseif inst.components.melter.cooking then
-    return "COOKING_SHORT"
+    result = "COOKING_SHORT"
   elseif inst.components.melter.done then
-    return "DONE"
+    result = "DONE"
   else
-    return "EMPTY"
+    result = "EMPTY"
   end
+  print("KK-TETS> getstatus(inst) =>", result)
+  return result
 end
 
 local function onfar(inst)
