@@ -278,8 +278,8 @@ function Melter:StopCooking(reason)
 end
 
 
-function Melter:Harvest( harvester )
-  print("HERE?")
+function Melter:Harvest(harvester)
+  --print("HERE?")
   if self.done then
     if self.onharvest then
       self.onharvest(self.inst)
@@ -289,30 +289,8 @@ function Melter:Harvest( harvester )
       if harvester and harvester.components.inventory then
         local loot = nil
         loot = SpawnPrefab("alloy")
-        --[[
-        if self.product ~= "spoiledfood" then
-          loot = SpawnPrefab(self.product)
-          if loot and loot.components.perishable then
-            loot.components.perishable:SetPercent( self.product_spoilage)
-            loot.components.perishable:LongUpdate(GetTime() - self.targettime)
-            loot.components.perishable:StartPerishing()
-          end
-        else
-          loot = SpawnPrefab("spoiled_food")
-        end
-        ]]
         if loot then
-          --[[
-          loot.targetMoisture = 0
-          loot:DoTaskInTime(2*FRAMES, function()
-            if loot.components.moisturelistener then
-              loot.components.moisturelistener.moisture = loot.targetMoisture
-              loot.targetMoisture = nil
-              loot.components.moisturelistener:DoUpdate()
-            end
-          end)
-          ]]
-          harvester.components.inventory:GiveItem(loot, nil, Vector3(TheSim:GetScreenPos(self.inst.Transform:GetWorldPosition())))
+          harvester.components.inventory:GiveItem(loot, nil, self.inst:GetPosition())
         end
       end
       self.product = nil
