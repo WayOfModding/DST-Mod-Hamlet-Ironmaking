@@ -15,10 +15,8 @@ local Melter = Class(function(self, inst)
   self.done = false
 
   self.product = nil
-  self.product_spoilage = nil
   self.recipes = nil
   self.default_recipe = nil
-  self.spoiledproduct = "alloy"
   self.maketastyfood = nil
 
   self.min_num_for_cook = 4
@@ -37,18 +35,6 @@ nil,
   done = ondone,
 })
 
-local function dospoil(inst)
-  if inst.components.melter and inst.components.melter.onspoil then
-    inst.components.melter.onspoil(inst)
-  end
-
-  if inst.components.melter.spoiltask then
-    inst.components.melter.spoiltask:Cancel()
-    inst.components.melter.spoiltask = nil
-    inst.components.melter.spoiltargettime = nil
-  end
-end
-
 local function dostew(inst)
   local stewercmp = inst.components.melter
   stewercmp.task = nil
@@ -56,20 +42,7 @@ local function dostew(inst)
   if stewercmp.ondonecooking then
     stewercmp.ondonecooking(inst)
   end
-  --[[
-  if stewercmp.product ~= nil then
-    local cooker = stewercmp.productcooker or (stewercmp.cookername or stewercmp.inst.prefab)
-    local prep_perishtime = (cooking.recipes and cooking.recipes[cooker] and cooking.recipes[cooker][stewercmp.product] and cooking.recipes[cooker][stewercmp.product].perishtime) and cooking.recipes[cooker][stewercmp.product].perishtime or TUNING.PERISH_SUPERFAST
-    local prod_spoil = stewercmp.product_spoilage or 1
-    stewercmp.spoiltime = prep_perishtime * prod_spoil
-    stewercmp.spoiltargettime =  GetTime() + stewercmp.spoiltime
-    stewercmp.spoiltask = stewercmp.inst:DoTaskInTime(stewercmp.spoiltime, function(inst)
-      if inst.components.melter and inst.components.melter.onspoil then
-        inst.components.melter.onspoil(inst)
-      end
-    end)
-  end
-  ]]
+
   stewercmp.done = true
   stewercmp.cooking = nil
 end
@@ -105,45 +78,6 @@ function Melter:StartCooking()
         self.onstartcooking(self.inst)
       end
 
-
-
-      local spoilage_total = 0
-      local spoilage_n = 0
-      local ings = {}
-      --[[
-      for k,v in pairs (self.inst.components.container.slots) do
-        table.insert(ings, v.prefab)
-        if v.components.perishable then
-          spoilage_n = spoilage_n + 1
-          spoilage_total = spoilage_total + v.components.perishable:GetPercent()
-        end
-      end
-
-      self.product_spoilage = 1
-      if spoilage_total > 0 then
-        self.product_spoilage = spoilage_total / spoilage_n
-        self.product_spoilage = 1 - (1 - self.product_spoilage)*.5
-      end
-
-
-      local foundthespecial = false
-      local cooktime = 1
-      if self.specialcookername then
-        -- check special first
-        if cooking.ValidRecipe(self.specialcookername, ings) then
-          self.product, cooktime = cooking.CalculateRecipe(self.specialcookername, ings)
-          self.productcooker = self.specialcookername
-          foundthespecial = true
-        end
-      end
-
-      if not foundthespecial then
-        -- fallback to regular cooking
-        local cooker = self.cookername or self.inst.prefab
-        self.product, cooktime = cooking.CalculateRecipe(cooker, ings)
-        self.productcooker = cooker
-      end
-       ]]
       self.product = "alloy"
       local cooktime = 0.2
       self.productcooker = self.inst.prefab
@@ -167,7 +101,6 @@ function Melter:OnSave()
     data.cooking = true
     data.product = self.product
     data.productcooker = self.productcooker
-    data.product_spoilage = self.product_spoilage
     if self.targettime and self.targettime > time then
       data.time = self.targettime - time
     end
@@ -176,10 +109,6 @@ function Melter:OnSave()
     local data = {}
     data.product = self.product
     data.productcooker = self.productcooker
-    data.product_spoilage = self.product_spoilage
-    if self.spoiltargettime and self.spoiltargettime > time then
-      data.spoiltime = self.spoiltargettime - time
-    end
     data.timesincefinish = -(GetTime() - (self.targettime or 0))
     data.done = true
     return data
@@ -193,7 +122,6 @@ function Melter:OnLoad(data)
     self.productcooker = data.productcooker or (self.cookername or self.inst.prefab)
     if self.oncontinuecooking then
       local time = data.time or 1
-      self.product_spoilage = data.product_spoilage or 1
       self.oncontinuecooking(self.inst)
       self.cooking = true
       self.targettime = GetTime() + time
@@ -205,21 +133,12 @@ function Melter:OnLoad(data)
 
     end
   elseif data.done then
-    self.product_spoilage = data.product_spoilage or 1
     self.done = true
     self.targettime = data.timesincefinish
     self.product = data.product
     self.productcooker = data.productcooker or (self.cookername or self.inst.prefab)
     if self.oncontinuedone then
       self.oncontinuedone(self.inst)
-    end
-    self.spoiltargettime = data.spoiltime and GetTime() + data.spoiltime or nil
-    if self.spoiltargettime then
-      self.spoiltask = self.inst:DoTaskInTime(data.spoiltime, function(inst)
-        if inst.components.melter and inst.components.melter.onspoil then
-          inst.components.melter.onspoil(inst)
-        end
-      end)
     end
     if self.inst.components.container then
       self.inst.components.container.canbeopened = false
@@ -245,11 +164,6 @@ function Melter:GetDebugString()
     if self.product then
       str = str.. " ".. self.product
     end
-
-    if self.product_spoilage then
-      str = str.."("..self.product_spoilage..")"
-    end
-
   return str
 end
 
@@ -261,10 +175,6 @@ function Melter:StopCooking(reason)
   if self.task then
     self.task:Cancel()
     self.task = nil
-  end
-  if self.spoiltask then
-    self.spoiltask:Cancel()
-    self.spoiltask = nil
   end
   if self.product and reason and reason == "fire" then
     local prod = SpawnPrefab(self.product)
@@ -284,7 +194,7 @@ function Melter:Harvest(harvester)
     if self.onharvest then
       self.onharvest(self.inst)
     end
-    self.done = nil
+
     if self.product then
       if harvester and harvester.components.inventory then
         local loot = nil
@@ -294,15 +204,12 @@ function Melter:Harvest(harvester)
         end
       end
       self.product = nil
-      self.spoiltargettime = nil
-
-      if self.spoiltask then
-        self.spoiltask:Cancel()
-        self.spoiltask = nil
-      end
     end
 
-    if self.inst.components.container and not self.inst:HasTag("flooded") then
+    self.done = nil
+    self.targettime = nil
+
+    if self.inst.components.container then
       self.inst.components.container.canbeopened = true
     end
 
@@ -311,33 +218,21 @@ function Melter:Harvest(harvester)
 end
 
 function Melter:LongUpdate(dt)
-    if not self.paused and self.targettime ~= nil then
-      if self.task ~= nil then
-        self.task:Cancel()
-        self.task = nil
-      end
-
-      self.targettime = self.targettime - dt
-
-      if self.cooking then
-        local time_to_wait = self.targettime - GetTime()
-        if time_to_wait < 0 then
-          dostew(self.inst)
-        else
-          self.task = self.inst:DoTaskInTime(time_to_wait, dostew, "stew")
-        end
-      end
+  if not self.paused and self.targettime ~= nil then
+    if self.task ~= nil then
+      self.task:Cancel()
+      self.task = nil
     end
 
-  if self.spoiltask ~= nil then
-    self.spoiltask:Cancel()
-    self.spoiltask = nil
-        self.spoiltargettime = self.spoiltargettime - dt
-    local time_to_wait = self.spoiltargettime - GetTime()
-    if time_to_wait <= 0 then
-      dospoil(self.inst)
-    else
-      self.spoiltask = self.inst:DoTaskInTime(time_to_wait, dospoil)
+    self.targettime = self.targettime - dt
+
+    if self.cooking then
+      local time_to_wait = self.targettime - GetTime()
+      if time_to_wait < 0 then
+        dostew(self.inst)
+      else
+        self.task = self.inst:DoTaskInTime(time_to_wait, dostew, "stew")
+      end
     end
   end
 end
