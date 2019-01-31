@@ -176,7 +176,6 @@ params.smelter =
     buttoninfo = {
       text = STRINGS.ACTIONS.SMELT,
       position = Vector3(0, -165, 0),
-      fn = function(inst) inst.components.melter:StartCooking() end,
     }
   },
   acceptsstacks = false,
@@ -188,18 +187,16 @@ function params.smelter.itemtestfn(container, item, slot)
 end
 
 function params.smelter.widget.buttoninfo.fn(inst)
-  -- TODO
   print("KK-TEST> Button down: SMELT/COOK ...")
   if inst.components.container ~= nil then
     BufferedAction(inst.components.container.opener, inst, ACTIONS.COOK):Do()
   elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
     SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.COOK.code, inst, ACTIONS.COOK.mod_name)
   end
-  inst.components.melter:StartCooking()
 end
 
 function params.smelter.widget.buttoninfo.validfn(inst)
-  return inst.components.melter ~= nil and inst.components.melter:CanCook()
+  return inst.replica.container ~= nil and inst.replica.container:IsFull()
 end
 
 --------------------------------------------------------------------------

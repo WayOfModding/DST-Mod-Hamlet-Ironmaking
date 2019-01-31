@@ -31,6 +31,23 @@ _G.TUNING.WINDBLOWN_SCALE_MAX = {
 
 --------------------------------------------------------------------
 local ACTIONS = _G.ACTIONS
+
+local old_cook_fn = ACTIONS.COOK.fn
+ACTIONS.COOK.fn = function(act)
+  if act.target.components.melter:IsCooking() then
+      --Already cooking
+      return true
+  end
+  local container = act.target.components.container
+  if container ~= nil and container:IsOpen() and not container:IsOpenedBy(act.doer) then
+      return false, "INUSE"
+  elseif not act.target.components.melter:CanCook() then
+      return false
+  end
+  act.target.components.melter:StartCooking()
+  return true
+end
+
 local old_harvest_fn = ACTIONS.HARVEST.fn
 ACTIONS.HARVEST.fn = function(act)
   if act.target.components.melter ~= nil then

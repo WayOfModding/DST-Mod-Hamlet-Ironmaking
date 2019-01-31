@@ -85,13 +85,12 @@ function Melter:GetTimeToCook()
   return 0
 end
 
-
 function Melter:CanCook()
-  local num = 0
-  for k,v in pairs (self.inst.components.container.slots) do
-    num = num + 1
-  end
-  return num >= self.min_num_for_cook and num <= self.max_num_for_cook
+  return self.inst.components.container ~= nil and self.inst.components.container:IsFull()
+end
+
+function Melter:IsCooking()
+    return not self.done and self.targettime ~= nil
 end
 
 
