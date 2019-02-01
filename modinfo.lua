@@ -2,7 +2,7 @@
 name = "[Hamlet] Ironmaking"
 
 --A version number so you can ask people if they are running an old version of your mod.
-version = "1.0.5"
+version = "1.0.6"
 
 --Who wrote this awesome mod?
 author = "KaiserKatze"
