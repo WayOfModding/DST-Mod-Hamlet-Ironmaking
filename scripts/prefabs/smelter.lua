@@ -12,6 +12,118 @@ local prefabs =
   "collapse_small"
 }
 
+--------------------------------------------------------------------------
+--[[ smelter ]]
+--------------------------------------------------------------------------
+local params = {}
+params.smelter =
+{
+  widget =
+  {
+    slotpos =
+    {
+      Vector3(0, 64 + 32 + 8 + 4, 0),
+      Vector3(0, 32 + 4, 0),
+      Vector3(0, -(32 + 4), 0),
+      Vector3(0, -(64 + 32 + 8 + 4), 0),
+    },
+    animbank = "ui_cookpot_1x4",
+    animbuild = "ui_cookpot_1x4",
+    pos = Vector3(200, 0, 0),
+    side_align_tip = 100,
+    buttoninfo =
+    {
+      text = STRINGS.ACTIONS.SMELT,
+      position = Vector3(0, -165, 0),
+    }
+  },
+  acceptsstacks = false,
+  type = "cooker",
+}
+
+function params.smelter.itemtestfn(container, item, slot)
+  return not container.inst:HasTag("burnt") and item.prefab == "iron"
+end
+
+function params.smelter.widget.buttoninfo.fn(inst)
+  --print("KK-TEST> Button down: SMELT/COOK ...")
+  if inst.components.container ~= nil then
+    BufferedAction(inst.components.container.opener, inst, ACTIONS.COOK):Do()
+  elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+    SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.COOK.code, inst, ACTIONS.COOK.mod_name)
+  end
+end
+
+function params.smelter.widget.buttoninfo.validfn(inst)
+  return inst.replica.container ~= nil and inst.replica.container:IsFull()
+end
+
+local function widgetsetup(container, prefab, data)
+  local t = params.smelter
+  for k, v in pairs(t) do
+    container[k] = v
+  end
+  container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
+end
+
+local widgetprops =
+{
+  "numslots",
+  "acceptsstacks",
+  "issidewidget",
+  "type",
+  "widget",
+  "itemtestfn",
+}
+
+local function ContainerReplica_WidgetSetup(self, prefab, data)
+  widgetsetup(self, prefab, data)
+  if self.classified ~= nil then
+    self.classified:InitializeSlots(self:GetNumSlots())
+  end
+  if self.issidewidget then
+    if self._onputininventory == nil then
+      self._owner = nil
+      self._ondropped = function(inst)
+        if self._owner ~= nil then
+          local owner = self._owner
+          self._owner = nil
+          if owner.HUD ~= nil then
+            owner:PushEvent("refreshcrafting")
+          end
+        end
+      end
+      self._onputininventory = function(inst, owner)
+        self._ondropped(inst)
+        self._owner = owner
+        if owner ~= nil and owner.HUD ~= nil then
+          owner:PushEvent("refreshcrafting")
+        end
+      end
+      self.inst:ListenForEvent("onputininventory", self._onputininventory)
+      self.inst:ListenForEvent("ondropped", self._ondropped)
+    end
+  end
+end
+
+local function Container_WidgetSetup(self, prefab, data)
+  print("KK-TEST> Invoke function Container:WidgetSetup("..prefab..").")
+  if prefab == "smelter" then
+    for i, v in ipairs(widgetprops) do
+      removesetter(self, v)
+    end
+
+    widgetsetup(self, prefab, data)
+    ContainerReplica_WidgetSetup(self.inst.replica.container, prefab, data)
+
+    for i, v in ipairs(widgetprops) do
+      makereadonly(self, v)
+    end
+  end
+end
+
+-----------------------------------------------------------
+
 local function onhammered(inst, worker)
   if inst:HasTag("fire") and inst.components.burnable then
     inst.components.burnable:Extinguish()
@@ -262,7 +374,7 @@ local function fn(Sim)
   inst.components.melter.onspoil = spoilfn
 
   inst:AddComponent("container")
-  inst.components.container:WidgetSetup("smelter")
+  Container_WidgetSetup(inst.components.container, "smelter")
   inst.components.container.onopenfn = onopen
   inst.components.container.onclosefn = onclose
 
