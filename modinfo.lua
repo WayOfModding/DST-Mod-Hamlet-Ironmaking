@@ -1,14 +1,14 @@
 --The name of the mod displayed in the 'mods' screen.
 name = "[Hamlet] Ironmaking"
 
---A description of the mod.
-description = "Ironmaking related features from Hamlet DLC of Don't Starve."
+--A version number so you can ask people if they are running an old version of your mod.
+version = "1.0.3"
 
 --Who wrote this awesome mod?
 author = "KaiserKatze"
 
---A version number so you can ask people if they are running an old version of your mod.
-version = "1.0.2"
+--A description of the mod.
+description = "version "..version.."\nIronmaking related features from Hamlet DLC of Don't Starve."
 
 --This lets other players know if your mod is out of date. This typically needs to be updated every time there's a new game update.
 api_version = 10
