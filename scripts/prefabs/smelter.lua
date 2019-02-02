@@ -57,71 +57,6 @@ end
 function params.smelter.widget.buttoninfo.validfn(inst)
   return inst.replica.container ~= nil and inst.replica.container:IsFull()
 end
-
-local function widgetsetup(container, prefab, data)
-  local t = params.smelter
-  for k, v in pairs(t) do
-    container[k] = v
-  end
-  container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-end
-
-local widgetprops =
-{
-  "numslots",
-  "acceptsstacks",
-  "issidewidget",
-  "type",
-  "widget",
-  "itemtestfn",
-}
-
-local function ContainerReplica_WidgetSetup(self, prefab, data)
-  widgetsetup(self, prefab, data)
-  if self.classified ~= nil then
-    self.classified:InitializeSlots(self:GetNumSlots())
-  end
-  if self.issidewidget then
-    if self._onputininventory == nil then
-      self._owner = nil
-      self._ondropped = function(inst)
-        if self._owner ~= nil then
-          local owner = self._owner
-          self._owner = nil
-          if owner.HUD ~= nil then
-            owner:PushEvent("refreshcrafting")
-          end
-        end
-      end
-      self._onputininventory = function(inst, owner)
-        self._ondropped(inst)
-        self._owner = owner
-        if owner ~= nil and owner.HUD ~= nil then
-          owner:PushEvent("refreshcrafting")
-        end
-      end
-      self.inst:ListenForEvent("onputininventory", self._onputininventory)
-      self.inst:ListenForEvent("ondropped", self._ondropped)
-    end
-  end
-end
-
-local function Container_WidgetSetup(self, prefab, data)
-  print("KK-TEST> Invoke function Container:WidgetSetup("..prefab..").")
-  if prefab == "smelter" then
-    for i, v in ipairs(widgetprops) do
-      removesetter(self, v)
-    end
-
-    widgetsetup(self, prefab, data)
-    ContainerReplica_WidgetSetup(self.inst.replica.container, prefab, data)
-
-    for i, v in ipairs(widgetprops) do
-      makereadonly(self, v)
-    end
-  end
-end
-
 -----------------------------------------------------------
 
 local function onhammered(inst, worker)
@@ -374,7 +309,7 @@ local function fn(Sim)
   inst.components.melter.onspoil = spoilfn
 
   inst:AddComponent("container")
-  Container_WidgetSetup(inst.components.container, "smelter")
+  inst.components.container:WidgetSetup("smelter", params.smelter)
   inst.components.container.onopenfn = onopen
   inst.components.container.onclosefn = onclose
 
