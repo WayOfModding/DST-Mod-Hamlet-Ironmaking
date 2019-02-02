@@ -263,6 +263,7 @@ local function fn(Sim)
 
   inst:AddComponent("container")
   inst.components.container:WidgetSetup("smelter")
+  inst.components.container:SetNumSlots(4)
   inst.components.container.onopenfn = onopen
   inst.components.container.onclosefn = onclose
 
