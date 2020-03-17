@@ -62,6 +62,7 @@ nil,
 function Melter:OnRemoveFromEntity()
   self.inst:RemoveTag("stewer")
   self.inst:RemoveTag("smelter")
+  self.inst:RemoveTag("readytocook")
 end
 
 local function dostew(inst)
