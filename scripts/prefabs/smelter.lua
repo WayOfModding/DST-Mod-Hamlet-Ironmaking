@@ -92,6 +92,37 @@ local function onfar(inst)
   end
 end
 
+local function onbuilt(inst)
+  inst.AnimState:PlayAnimation("place")
+  inst.AnimState:PushAnimation("idle_empty")
+  inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/build")
+  inst:DoTaskInTime(1/30, function()
+    if inst.AnimState:IsCurrentAnimation("place") then
+      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
+    end
+  end)
+  inst:DoTaskInTime(4/30, function()
+    if inst.AnimState:IsCurrentAnimation("place") then
+      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
+    end
+  end)
+  inst:DoTaskInTime(8/30, function()
+    if inst.AnimState:IsCurrentAnimation("place") then
+      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
+    end
+  end)
+  inst:DoTaskInTime(12/30, function()
+    if inst.AnimState:IsCurrentAnimation("place") then
+      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
+    end
+  end)
+  inst:DoTaskInTime(14/30, function()
+    if inst.AnimState:IsCurrentAnimation("place") then
+      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
+    end
+  end)
+end
+
 --anim and sound callbacks
 
 local function ShowProduct(inst)
@@ -183,37 +214,6 @@ local function harvestfn(inst)
   if not inst:HasTag("burnt") then
     inst.AnimState:PlayAnimation("idle_empty")
   end
-end
-
-local function onbuilt(inst)
-  inst.AnimState:PlayAnimation("place")
-  inst.AnimState:PushAnimation("idle_empty")
-  inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/build")
-  inst:DoTaskInTime(1/30, function()
-    if inst.AnimState:IsCurrentAnimation("place") then
-      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
-    end
-  end)
-  inst:DoTaskInTime(4/30, function()
-    if inst.AnimState:IsCurrentAnimation("place") then
-      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
-    end
-  end)
-  inst:DoTaskInTime(8/30, function()
-    if inst.AnimState:IsCurrentAnimation("place") then
-      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
-    end
-  end)
-  inst:DoTaskInTime(12/30, function()
-    if inst.AnimState:IsCurrentAnimation("place") then
-      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
-    end
-  end)
-  inst:DoTaskInTime(14/30, function()
-    if inst.AnimState:IsCurrentAnimation("place") then
-      inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/brick")
-    end
-  end)
 end
 
 local function onsave(inst, data)
