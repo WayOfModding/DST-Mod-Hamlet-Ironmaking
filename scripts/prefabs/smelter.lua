@@ -12,6 +12,53 @@ local prefabs =
   "collapse_small"
 }
 
+--------------------------------------------------------------------------
+--[[ smelter ]]
+--------------------------------------------------------------------------
+local params = {}
+params.smelter =
+{
+  widget =
+  {
+    slotpos =
+    {
+      Vector3(0, 64 + 32 + 8 + 4, 0),
+      Vector3(0, 32 + 4, 0),
+      Vector3(0, -(32 + 4), 0),
+      Vector3(0, -(64 + 32 + 8 + 4), 0),
+    },
+    animbank = "ui_cookpot_1x4",
+    animbuild = "ui_cookpot_1x4",
+    pos = Vector3(200, 0, 0),
+    side_align_tip = 100,
+    buttoninfo =
+    {
+      text = STRINGS.ACTIONS.SMELT,
+      position = Vector3(0, -165, 0),
+    }
+  },
+  acceptsstacks = false,
+  type = "cooker",
+}
+
+function params.smelter.itemtestfn(container, item, slot)
+  return not container.inst:HasTag("burnt") and item.prefab == "iron"
+end
+
+function params.smelter.widget.buttoninfo.fn(inst)
+  --print("KK-TEST> Button down: SMELT/COOK ...")
+  if inst.components.container ~= nil then
+    BufferedAction(inst.components.container.opener, inst, ACTIONS.COOK):Do()
+  elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+    SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.COOK.code, inst, ACTIONS.COOK.mod_name)
+  end
+end
+
+function params.smelter.widget.buttoninfo.validfn(inst)
+  return inst.replica.container ~= nil and inst.replica.container:IsFull()
+end
+-----------------------------------------------------------
+
 local function onhammered(inst, worker)
   if inst:HasTag("fire") and inst.components.burnable then
     inst.components.burnable:Extinguish()
@@ -262,8 +309,7 @@ local function fn(Sim)
   inst.components.melter.onspoil = spoilfn
 
   inst:AddComponent("container")
-  inst.components.container:WidgetSetup("smelter")
-  inst.components.container:SetNumSlots(4)
+  inst.components.container:WidgetSetup("smelter", params.smelter)
   inst.components.container.onopenfn = onopen
   inst.components.container.onclosefn = onclose
 
