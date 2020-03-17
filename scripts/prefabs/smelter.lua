@@ -35,7 +35,11 @@ local function onhammered(inst, worker)
   if inst.components.burnable and inst.components.burnable:IsBurning() then
     inst.components.burnable:Extinguish()
   end
-  if not inst:HasTag("burnt") and inst.components.melter and inst.components.melter.product and inst.components.melter.done then
+  if not inst:HasTag("burnt")
+    and inst.components.melter
+    and inst.components.melter.product
+    and inst.components.melter.done
+  then
     inst.components.lootdropper:AddChanceLoot(inst.components.melter.product, 1)
   end
   inst.components.lootdropper:DropLoot()
