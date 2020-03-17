@@ -149,6 +149,7 @@ end
 local function startcookfn(inst)
   if not inst:HasTag("burnt") then
     inst.AnimState:PlayAnimation("smelting_pre")
+    -- TODO copy sound files from DS to DST
     inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/objects/smelter/move_1")
     inst.AnimState:PushAnimation("smelting_loop", true)
     --play a looping sound
