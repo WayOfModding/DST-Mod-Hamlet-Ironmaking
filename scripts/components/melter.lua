@@ -9,6 +9,19 @@ local function ondone(self, done)
   end
 end
 
+local function oncheckready(inst)
+  if inst.components.container ~= nil
+    and not inst.components.container:IsOpen()
+    and inst.components.container:IsFull()
+  then
+    inst:AddTag("readytocook")
+  end
+end
+
+local function onnotready(inst)
+  inst:RemoveTag("readytocook")
+end
+
 local Melter = Class(function(self, inst)
   self.inst = inst
   self.cooking = false
@@ -32,6 +45,14 @@ local Melter = Class(function(self, inst)
 
   self.inst:AddTag("stewer")
   self.inst:AddTag("smelter")
+
+  self.task = nil
+  self.targettime = nil
+
+  inst:ListenForEvent("itemget", oncheckready)
+  inst:ListenForEvent("onclose", oncheckready)
+  inst:ListenForEvent("itemlose", onnotready)
+  inst:ListenForEvent("onopen", onnotready)
 end,
 nil,
 {
