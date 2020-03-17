@@ -89,7 +89,11 @@ function Melter:GetTimeToCook()
 end
 
 function Melter:IsCooking()
-    return not self.done and self.targettime ~= nil
+  return not self.done and self.targettime ~= nil
+end
+
+function Melter:IsDone()
+  return self.done
 end
 
 function Melter:SetCookerName(_name)
@@ -210,10 +214,6 @@ function Melter:GetDebugString()
       str = str.. " ".. self.product
     end
   return str
-end
-
-function Melter:IsDone()
-  return self.done
 end
 
 
