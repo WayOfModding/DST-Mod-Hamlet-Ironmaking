@@ -59,6 +59,11 @@ nil,
   done = ondone,
 })
 
+function Melter:OnRemoveFromEntity()
+  self.inst:RemoveTag("stewer")
+  self.inst:RemoveTag("smelter")
+end
+
 local function dostew(inst)
   local stewercmp = inst.components.melter
   stewercmp.task = nil
@@ -80,11 +85,6 @@ function Melter:GetTimeToCook()
     return self.targettime - GetTime()
   end
   return 0
-end
-
-function Melter:OnRemoveFromEntity()
-  self.inst:RemoveTag("stewer")
-  self.inst:RemoveTag("smelter")
 end
 
 function Melter:CanCook()
