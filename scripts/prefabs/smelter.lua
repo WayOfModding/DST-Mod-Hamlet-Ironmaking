@@ -75,6 +75,16 @@ local function onopen(inst)
   end
 end
 
+local function onclose(inst)
+  if not inst:HasTag("burnt") then
+    if not inst.components.melter.cooking then
+      inst.AnimState:PlayAnimation("idle_empty")
+      inst.SoundEmitter:KillSound("snd")
+    end
+    inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/move_3", "close")
+  end
+end
+
 --anim and sound callbacks
 
 local function ShowProduct(inst)
@@ -96,16 +106,6 @@ local function startcookfn(inst)
   end
 end
 
-
-local function onclose(inst)
-  if not inst:HasTag("burnt") then
-    if not inst.components.melter.cooking then
-      inst.AnimState:PlayAnimation("idle_empty")
-      inst.SoundEmitter:KillSound("snd")
-    end
-    inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/move_3", "close")
-  end
-end
 
 local function spoilfn(inst)
   if not inst:HasTag("burnt") then
