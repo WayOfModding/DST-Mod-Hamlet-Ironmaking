@@ -66,6 +66,14 @@ local function onhit(inst, worker)
   end
 end
 
+local function onopen(inst)
+  if not inst:HasTag("burnt") then
+    -- inst.AnimState:PlayAnimation("smelting_pre")
+    inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/move_3", "open")
+    -- inst.SoundEmitter:PlaySound("dontstarve/common/cookingpot", "snd")
+  end
+end
+
 --anim and sound callbacks
 
 local function ShowProduct(inst)
@@ -87,14 +95,6 @@ local function startcookfn(inst)
   end
 end
 
-
-local function onopen(inst)
-  if not inst:HasTag("burnt") then
-    -- inst.AnimState:PlayAnimation("smelting_pre")
-    inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/move_3", "open")
-    -- inst.SoundEmitter:PlaySound("dontstarve/common/cookingpot", "snd")
-  end
-end
 
 local function onclose(inst)
   if not inst:HasTag("burnt") then
