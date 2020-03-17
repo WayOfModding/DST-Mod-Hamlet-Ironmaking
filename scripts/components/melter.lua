@@ -81,15 +81,15 @@ function Melter:CanCook()
   return self.inst.components.container ~= nil and self.inst.components.container:IsFull()
 end
 
-function Melter:SetCookerName(_name)
-  self.cookername = _name
-end
-
 function Melter:GetTimeToCook()
   if self.cooking then
     return self.targettime - GetTime()
   end
   return 0
+end
+
+function Melter:SetCookerName(_name)
+  self.cookername = _name
 end
 
 function Melter:IsCooking()
