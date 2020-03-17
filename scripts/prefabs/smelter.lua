@@ -124,6 +124,19 @@ local function onbuilt(inst)
   end)
 end
 
+local function onsave(inst, data)
+  if inst:HasTag("burnt") or inst:HasTag("fire") then
+    data.burnt = true
+  end
+end
+
+local function onload(inst, data)
+  if data and data.burnt then
+    inst.components.burnable.onburnt(inst)
+    inst.Light:Enable(false)
+  end
+end
+
 --anim and sound callbacks
 
 local function ShowProduct(inst)
@@ -214,19 +227,6 @@ end
 local function harvestfn(inst)
   if not inst:HasTag("burnt") then
     inst.AnimState:PlayAnimation("idle_empty")
-  end
-end
-
-local function onsave(inst, data)
-  if inst:HasTag("burnt") or inst:HasTag("fire") then
-    data.burnt = true
-  end
-end
-
-local function onload(inst, data)
-  if data and data.burnt then
-    inst.components.burnable.onburnt(inst)
-    inst.Light:Enable(false)
   end
 end
 
