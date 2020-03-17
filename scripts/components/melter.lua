@@ -102,6 +102,22 @@ function Melter:StartCooking()
   end
 end
 
+function Melter:StopCooking(reason)
+  if self.task then
+    self.task:Cancel()
+    self.task = nil
+  end
+  if self.product and reason and reason == "fire" then
+    local prod = SpawnPrefab(self.product)
+    if prod then
+      prod.Transform:SetPosition(self.inst.Transform:GetWorldPosition())
+      prod:DoTaskInTime(0, function(prod) prod.Physics:Stop() end)
+    end
+  end
+  self.product = nil
+  self.targettime = nil
+end
+
 function Melter:OnSave()
   local time = GetTime()
   if self.cooking then
@@ -177,22 +193,6 @@ end
 
 function Melter:IsDone()
   return self.done
-end
-
-function Melter:StopCooking(reason)
-  if self.task then
-    self.task:Cancel()
-    self.task = nil
-  end
-  if self.product and reason and reason == "fire" then
-    local prod = SpawnPrefab(self.product)
-    if prod then
-      prod.Transform:SetPosition(self.inst.Transform:GetWorldPosition())
-      prod:DoTaskInTime(0, function(prod) prod.Physics:Stop() end)
-    end
-  end
-  self.product = nil
-  self.targettime = nil
 end
 
 
