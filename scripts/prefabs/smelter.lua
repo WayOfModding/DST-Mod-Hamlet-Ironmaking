@@ -32,7 +32,7 @@ local function getstatus(inst)
 end
 
 local function onhammered(inst, worker)
-  if inst:HasTag("fire") and inst.components.burnable then
+  if inst.components.burnable and inst.components.burnable:IsBurning() then
     inst.components.burnable:Extinguish()
   end
   if not inst:HasTag("burnt") and inst.components.melter and inst.components.melter.product and inst.components.melter.done then
