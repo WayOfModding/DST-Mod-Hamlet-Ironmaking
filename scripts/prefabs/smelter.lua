@@ -159,10 +159,19 @@ local function startcookfn(inst)
   end
 end
 
-
-local function spoilfn(inst)
+local function continuecookfn(inst)
   if not inst:HasTag("burnt") then
-    inst.components.melter.product = inst.components.melter.spoiledproduct
+    inst.AnimState:PlayAnimation("smelting_loop", true)
+    --play a looping sound
+    inst.Light:Enable(true)
+
+    inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/smelt_LP", "snd")
+  end
+end
+
+local function continuedonefn(inst)
+  if not inst:HasTag("burnt") then
+    inst.AnimState:PlayAnimation("idle_full")
     ShowProduct(inst)
   end
 end
@@ -208,20 +217,10 @@ local function donecookfn(inst)
   end
 end
 
-local function continuedonefn(inst)
+local function spoilfn(inst)
   if not inst:HasTag("burnt") then
-    inst.AnimState:PlayAnimation("idle_full")
+    inst.components.melter.product = inst.components.melter.spoiledproduct
     ShowProduct(inst)
-  end
-end
-
-local function continuecookfn(inst)
-  if not inst:HasTag("burnt") then
-    inst.AnimState:PlayAnimation("smelting_loop", true)
-    --play a looping sound
-    inst.Light:Enable(true)
-
-    inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/smelt_LP", "snd")
   end
 end
 
