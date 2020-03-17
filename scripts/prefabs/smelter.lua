@@ -42,6 +42,9 @@ local function onhammered(inst, worker)
   then
     inst.components.lootdropper:AddChanceLoot(inst.components.melter.product, 1)
   end
+  if inst.components.container then
+    inst.components.container:DropEverything()
+  end
   inst.components.lootdropper:DropLoot()
   local fx = SpawnPrefab("collapse_small")
   fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
