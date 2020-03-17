@@ -226,8 +226,7 @@ function Melter:Harvest(harvester)
 
     if self.product then
       if harvester and harvester.components.inventory then
-        local loot = nil
-        loot = SpawnPrefab("alloy")
+        local loot = SpawnPrefab("alloy")
         if loot then
           harvester.components.inventory:GiveItem(loot, nil, self.inst:GetPosition())
         end
