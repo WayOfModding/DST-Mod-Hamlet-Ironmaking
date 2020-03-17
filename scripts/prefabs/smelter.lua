@@ -14,6 +14,23 @@ local prefabs =
 
 -----------------------------------------------------------
 
+local function getstatus(inst)
+  local result
+  if inst:HasTag("burnt") then
+    result = "BURNT"
+  elseif inst.components.melter.cooking and inst.components.melter:GetTimeToCook() > 15 then
+    result = "COOKING_LONG"
+  elseif inst.components.melter.cooking then
+    result = "COOKING_SHORT"
+  elseif inst.components.melter.done then
+    result = "DONE"
+  else
+    result = "EMPTY"
+  end
+  --print("KK-TETS> getstatus(inst) =>", result)
+  return result
+end
+
 local function onhammered(inst, worker)
   if inst:HasTag("fire") and inst.components.burnable then
     inst.components.burnable:Extinguish()
@@ -151,23 +168,6 @@ local function harvestfn(inst)
   if not inst:HasTag("burnt") then
     inst.AnimState:PlayAnimation("idle_empty")
   end
-end
-
-local function getstatus(inst)
-  local result
-  if inst:HasTag("burnt") then
-    result = "BURNT"
-  elseif inst.components.melter.cooking and inst.components.melter:GetTimeToCook() > 15 then
-    result = "COOKING_LONG"
-  elseif inst.components.melter.cooking then
-    result = "COOKING_SHORT"
-  elseif inst.components.melter.done then
-    result = "DONE"
-  else
-    result = "EMPTY"
-  end
-  print("KK-TETS> getstatus(inst) =>", result)
-  return result
 end
 
 local function onfar(inst)
