@@ -51,24 +51,6 @@ AddRecipe(
   "images/smelter.xml", -- atlas
   "smelter.tex" -- image
 )
-AddRecipe(
-  "antmaskhat",
-  {
-    Ingredient("chitin", 5),
-    Ingredient("footballhat", 1)
-  },
-  RECIPETABS.WAR,
-  TECH.SCIENCE_ONE
-)
-AddRecipe(
-  "antsuit",
-  {
-    Ingredient("chitin", 5),
-    Ingredient("armorwood", 1)
-  },
-  RECIPETABS.WAR,
-  TECH.SCIENCE_ONE
-)
 
 
 --------------------------------------------------------------------
