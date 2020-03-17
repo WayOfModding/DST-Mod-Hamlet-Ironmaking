@@ -88,12 +88,12 @@ function Melter:GetTimeToCook()
   return 0
 end
 
-function Melter:SetCookerName(_name)
-  self.cookername = _name
-end
-
 function Melter:IsCooking()
     return not self.done and self.targettime ~= nil
+end
+
+function Melter:SetCookerName(_name)
+  self.cookername = _name
 end
 
 
