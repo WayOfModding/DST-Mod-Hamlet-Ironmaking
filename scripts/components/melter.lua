@@ -248,7 +248,7 @@ function Melter:Harvest(harvester)
 end
 
 function Melter:LongUpdate(dt)
-  if not self.paused and self.targettime ~= nil then
+  if self:IsCooking() then
     if self.task ~= nil then
       self.task:Cancel()
       self.task = nil
