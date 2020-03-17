@@ -174,6 +174,9 @@ function containers.widgetsetup(container, prefab, data)
     for k, v in pairs(t) do
         container[k] = v
     end
+    -- the following invocation sets `inst.components.container.numslots` to 4
+    -- which is essential to the invocation of `self.inst.components.container:IsFull()`
+    -- appeared in file 'scripts/components/melter.lua' function 'Melter:CanCook'
     container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
   else -- [2] the only difference is the following `else` block
     return old_widgetsetup(container, prefab, data)
