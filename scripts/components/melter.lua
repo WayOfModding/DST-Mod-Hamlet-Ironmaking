@@ -78,7 +78,6 @@ end
 function Melter:StartCooking()
   if not self.done and not self.cooking then
     if self.inst.components.container then
-
       self.done = nil
       self.cooking = true
 
@@ -98,7 +97,6 @@ function Melter:StartCooking()
       self.inst.components.container:DestroyContents()
       self.inst.components.container.canbeopened = false
     end
-
   end
 end
 
@@ -117,6 +115,7 @@ function Melter:StopCooking(reason)
   self.product = nil
   self.targettime = nil
 end
+
 
 function Melter:OnSave()
   local time = GetTime()
