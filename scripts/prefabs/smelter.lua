@@ -81,6 +81,7 @@ local function onclose(inst)
       inst.AnimState:PlayAnimation("idle_empty")
       inst.SoundEmitter:KillSound("snd")
     end
+    -- TODO copy sound files from DS to DST
     inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/move_3", "close")
   end
 end
