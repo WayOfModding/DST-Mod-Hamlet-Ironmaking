@@ -86,6 +86,12 @@ local function onclose(inst)
   end
 end
 
+local function onfar(inst)
+  if inst.components.container then
+    inst.components.container:Close()
+  end
+end
+
 --anim and sound callbacks
 
 local function ShowProduct(inst)
@@ -176,12 +182,6 @@ end
 local function harvestfn(inst)
   if not inst:HasTag("burnt") then
     inst.AnimState:PlayAnimation("idle_empty")
-  end
-end
-
-local function onfar(inst)
-  if inst.components.container then
-    inst.components.container:Close()
   end
 end
 
