@@ -249,13 +249,12 @@ local function fn(Sim)
   inst.Light:SetColour(235/255,62/255,12/255)
   --inst.Light:SetColour(1,0,0)
 
-  inst:AddTag("structure")
-  MakeObstaclePhysics(inst, .5)
-
   inst.AnimState:SetBank("smelter")
   inst.AnimState:SetBuild("smelter")
   inst.AnimState:PlayAnimation("idle_empty")
 
+  inst:AddTag("structure")
+  MakeObstaclePhysics(inst, .5)
   MakeSnowCoveredPristine(inst)
 
     inst:AddTag("_smelter")
