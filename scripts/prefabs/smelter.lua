@@ -68,6 +68,7 @@ end
 
 local function onopen(inst)
   if not inst:HasTag("burnt") then
+    -- TODO copy sound files from DS to DST
     -- inst.AnimState:PlayAnimation("smelting_pre")
     inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/move_3", "open")
     -- inst.SoundEmitter:PlaySound("dontstarve/common/cookingpot", "snd")
