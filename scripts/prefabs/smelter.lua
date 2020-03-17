@@ -95,6 +95,7 @@ end
 local function onbuilt(inst)
   inst.AnimState:PlayAnimation("place")
   inst.AnimState:PushAnimation("idle_empty")
+  -- TODO copy sound files from DS to DST
   inst.SoundEmitter:PlaySound("dontstarve_DLC003/common/crafted/smelter/build")
   inst:DoTaskInTime(1/30, function()
     if inst.AnimState:IsCurrentAnimation("place") then
