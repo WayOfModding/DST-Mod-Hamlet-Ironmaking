@@ -15,8 +15,10 @@ local Melter = Class(function(self, inst)
   self.done = false
 
   self.product = nil
+  self.product_spoilage = nil
   self.recipes = nil
   self.default_recipe = nil
+  self.spoiledproduct = "alloy"
   self.maketastyfood = nil
 
   self.min_num_for_cook = 4
@@ -29,6 +31,7 @@ local Melter = Class(function(self, inst)
   self.productcooker = nil    -- hold on to the cookername that is cooking the current product
 
   self.inst:AddTag("stewer")
+  self.inst:AddTag("smelter")
 end,
 nil,
 {
@@ -56,6 +59,11 @@ function Melter:GetTimeToCook()
     return self.targettime - GetTime()
   end
   return 0
+end
+
+function Melter:OnRemoveFromEntity()
+  self.inst:RemoveTag("stewer")
+  self.inst:RemoveTag("smelter")
 end
 
 function Melter:CanCook()
