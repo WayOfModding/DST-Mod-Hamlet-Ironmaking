@@ -8,7 +8,8 @@ version = "1.1.0"
 author = "KaiserKatze"
 
 --A description of the mod.
-description = "version "..version.."\nIronmaking related features from Hamlet DLC of Don't Starve."
+description = "Ironmaking related features from Hamlet DLC of Don't Starve."
+description = "version "..version.."\n"..description
 
 --This lets other players know if your mod is out of date. This typically needs to be updated every time there's a new game update.
 api_version = 10
