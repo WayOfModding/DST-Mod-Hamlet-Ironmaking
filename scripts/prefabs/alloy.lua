@@ -6,6 +6,7 @@ local assets =
   Asset("INV_IMAGE", "alloy"),
 }
 
+--[[
 local function shine(inst)
   inst.task = nil
   if inst.onwater then
@@ -17,6 +18,7 @@ local function shine(inst)
   end
   inst.task = inst:DoTaskInTime(4+math.random()*5, function() shine(inst) end)
 end
+--]]
 
 
 local function OnWaterChange(inst, onwater)
@@ -33,20 +35,24 @@ end
 
 local function fn(Sim)
   local inst = CreateEntity()
+
   inst.entity:AddTransform()
   inst.entity:AddAnimState()
   inst.entity:AddSoundEmitter()
   inst.entity:AddNetwork()
 
   MakeInventoryPhysics(inst)
-  MakeInventoryFloatable(inst, "idle_water", "idle")
-  MakeBlowInHurricane(inst, TUNING.WINDBLOWN_SCALE_MIN.MEDIUM, TUNING.WINDBLOWN_SCALE_MAX.MEDIUM)
+  --MakeInventoryFloatable(inst, "idle_water", "idle")
+  --MakeBlowInHurricane(inst, TUNING.WINDBLOWN_SCALE_MIN.MEDIUM, TUNING.WINDBLOWN_SCALE_MAX.MEDIUM)
 
-  inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+  --inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
   inst.AnimState:SetBank("alloy")
   inst.AnimState:SetBuild("alloy")
   inst.AnimState:PlayAnimation("idle")
+
+  inst:AddTag("molebait")
+  inst:AddTag("scarerbait")
 
     inst:AddTag("_alloy")
     inst.entity:SetPristine()
@@ -56,19 +62,21 @@ local function fn(Sim)
     inst:RemoveTag("_alloy")
 
   inst:AddComponent("edible")
-  inst.components.edible.foodtype = "ELEMENTAL"
+  inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
   inst.components.edible.hungervalue = 2
   inst:AddComponent("tradable")
 
+  inst:AddComponent("stackable")
+  inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
+
   inst:AddComponent("inspectable")
 
-  inst:AddComponent("stackable")
   inst:AddComponent("inventoryitem")
   inst.components.inventoryitem.atlasname = imageAtlas
 
+  MakeHauntableLaunchAndSmash(inst)
+
   inst:AddComponent("bait")
-  inst:AddTag("molebait")
-  inst:AddTag("scarerbait")
 
   --[[
   inst:AddComponent("tiletracker")
@@ -78,7 +86,8 @@ local function fn(Sim)
   inst.OnEntitySleep = OnEntitySleep
   --]]
 
-  shine(inst)
+  --shine(inst)
+
   return inst
 end
 

@@ -6,6 +6,7 @@ local assets =
   Asset("INV_IMAGE", "iron"),
 }
 
+--[[
 local function onsave(inst, data)
   data.anim = inst.animname
 end
@@ -16,20 +17,26 @@ local function onload(inst, data)
     inst.AnimState:PlayAnimation(inst.animname)
   end
 end
+--]]
 
 local function fn(Sim)
   local inst = CreateEntity()
+
   inst.entity:AddTransform()
   inst.entity:AddAnimState()
   inst.entity:AddSoundEmitter()
   inst.entity:AddNetwork()
 
   MakeInventoryPhysics(inst)
-  MakeBlowInHurricane(inst, TUNING.WINDBLOWN_SCALE_MIN.HEAVY, TUNING.WINDBLOWN_SCALE_MAX.HEAVY)
+  --MakeBlowInHurricane(inst, TUNING.WINDBLOWN_SCALE_MIN.HEAVY, TUNING.WINDBLOWN_SCALE_MAX.HEAVY)
 
   inst.AnimState:SetBank("iron_ore")
   inst.AnimState:SetBuild("iron_ore")
   inst.AnimState:PlayAnimation("idle")
+
+  inst:AddTag("molebait")
+  inst:AddTag("renewable")
+  inst:AddTag("quakedebris")
 
     inst:AddTag("_iron")
     inst.entity:SetPristine()
@@ -39,7 +46,7 @@ local function fn(Sim)
     inst:RemoveTag("_iron")
 
   inst:AddComponent("edible")
-  inst.components.edible.foodtype = "ELEMENTAL"
+  inst.components.edible.foodtype = FOODTYPE.ELEMENTAL
   inst.components.edible.hungervalue = 1
   inst:AddComponent("tradable")
 
@@ -52,15 +59,16 @@ local function fn(Sim)
   inst.components.inventoryitem.atlasname = imageAtlas
 
   inst:AddComponent("bait")
-  inst:AddTag("molebait")
 
   --[[
-    inst:AddComponent("repairer")
-    inst.components.repairer.repairmaterial = "orp"
-    inst.components.repairer.healthrepairvalue = TUNING.REPAIR_ROCKS_HEALTH
-  ]]
+  inst:AddComponent("repairer")
+  inst.components.repairer.repairmaterial = "orp"
+  inst.components.repairer.healthrepairvalue = TUNING.REPAIR_ROCKS_HEALTH
+
   inst.OnSave = onsave
   inst.OnLoad = onload
+  --]]
+
   return inst
 end
 
